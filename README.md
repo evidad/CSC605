@@ -1,6 +1,6 @@
-# LAB - Class 33
+# CSC 605
 
-## Project: drf-auth
+## Project: Kakeibo 2.0
 
 ### Author: Anthony R, Dillion T Errol V
 V.1.0.0
@@ -20,8 +20,7 @@ i.e.
 
 ### How to initialize/run your application (where applicable)
 
-- git clone https://github.com/Code-Fellows-School-Work/drf-auth
-- cd kakeibo-financial-app
+- git clone https://github.com/evidad/CSC605
 - Run the command: docker build -t django_project .
 - Run the command: docker compose up --build
 - Run the command: docker compose run web python manage.py createsuperuser
