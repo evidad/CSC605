@@ -16,12 +16,17 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
+from kakeibo_finance.views import CustomLoginView, SignupView, home, dashboard
 from rest_framework_simplejwt.views import(
     TokenObtainPairView,
     TokenRefreshView,
 )
 
 urlpatterns = [
+    path('login/', CustomLoginView.as_view(), name='login'),
+    path('signup/', SignupView.as_view(), name='signup'),
+    path('', home, name='home'),
+    path('dashboard/', dashboard, name='dashboard'),
     path('admin/', admin.site.urls),
     path('api/v1/kakeibo/', include('kakeibo_finance.urls')),
     path('api-auth/', include('rest_framework.urls')),
