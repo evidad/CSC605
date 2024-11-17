@@ -44,5 +44,8 @@
     {% endfor %}
   </ul>
 
-  <a href="{% url 'logout' %}">Logout</a>
+  <form method="post" action="{% url 'logout' %}" style="margin-top: 20px;">
+    {% csrf_token %}
+    <button type="submit">Logout</button>
+  </form>
 {% endblock %}
