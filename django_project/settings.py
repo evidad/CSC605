@@ -49,7 +49,7 @@ INSTALLED_APPS = [
 LOGIN_REDIRECT_URL = '/dashboard/'  # Or any path you want as the home page
 
 # Redirect URL after logout
-LOGOUT_REDIRECT_URL = 'login'  # Replace 'login' with the name of your login route
+LOGOUT_REDIRECT_URL = '/login/'  # Replace 'login' with the name of your login route
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
