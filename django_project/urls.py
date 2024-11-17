@@ -16,7 +16,7 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
-from kakeibo_finance.views import CustomLoginView, SignupView, home, dashboard
+from kakeibo_finance.views import CustomLoginView, SignupView, home, dashboard, add_transaction
 from rest_framework_simplejwt.views import (
     TokenObtainPairView,
     TokenRefreshView,
@@ -31,6 +31,7 @@ urlpatterns = [
     path('dashboard/', dashboard, name='dashboard'),
      path('password_change/', PasswordChangeView.as_view(), name='password_change'),
     path('password_change/done/', PasswordChangeDoneView.as_view(), name='password_change_done'),
+    path('add-transaction/', add_transaction, name='add_transaction'),
     path('admin/', admin.site.urls),
     path('api/v1/kakeibo/', include('kakeibo_finance.urls')),
     path('api-auth/', include('rest_framework.urls')),

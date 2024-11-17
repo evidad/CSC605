@@ -3,8 +3,9 @@
 {% block content %}
   <h2>Welcome, {{ user.username }}!</h2>
 
+  <!-- Transactions Section -->
   <h3>Your Transactions</h3>
-  <table>
+  <table border="1" cellpadding="10" cellspacing="0">
     <thead>
       <tr>
         <th>Category</th>
@@ -23,20 +24,34 @@
       </tr>
       {% empty %}
       <tr>
-        <td colspan="4">No transactions found.</td>
+        <td colspan="4">No transactions found. <a href="{% url 'add_transaction' %}">Add your first transaction!</a></td>
       </tr>
       {% endfor %}
     </tbody>
   </table>
+  <p>
+    <a href="{% url 'add_transaction' %}">Add New Transaction</a>
+  </p>
 
+  <!-- Budgets Section -->
   <h3>Your Budgets</h3>
   <ul>
     {% for budget in budgets %}
-    <li>{{ budget.month }}: Income Goal: ${{ budget.income_goal }}, Savings Goal: ${{ budget.savings_goal }}</li>
+    <li>
+      <strong>{{ budget.month }}</strong>: 
+      Income Goal: ${{ budget.income_goal }}, 
+      Savings Goal: ${{ budget.savings_goal }}
+    </li>
     {% empty %}
     <li>No budgets found.</li>
     {% endfor %}
   </ul>
+  <p>
+    <a href="#">Add New Budget (Coming Soon)</a>
+  </p>
 
-  <a href="{% url 'logout' %}">Logout</a>
+  <!-- Logout Section -->
+  <p>
+    <a href="{% url 'logout' %}">Logout</a>
+  </p>
 {% endblock %}

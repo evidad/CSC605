@@ -7,8 +7,9 @@ from .serializers import TransactionSerializer, BudgetSerializer
 from .permissions import IsOwnerOrReadOnly
 from django.contrib.auth.views import LoginView
 from django.contrib.auth.forms import UserCreationForm
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
+from .forms import TransactionForm
 
 # Transaction Views
 class TransactionListView(ListCreateAPIView):
@@ -56,3 +57,19 @@ def dashboard(request):
         'budgets': budgets,
     }
     return render(request, 'dashboard.html', context)
+
+# Add Transaction View
+@login_required
+def add_transaction(request):
+    if request.method == 'POST':
+        form = TransactionForm(request.POST)
+        if form.is_valid():
+            transaction = form.save(commit=False)
+            transaction.owner = request.user
+            transaction.save()
+            return redirect('dashboard')
+    else:
+        form = TransactionForm()
+
+    context = {'form': form}
+    return render(request, 'add_transaction.html', context)
