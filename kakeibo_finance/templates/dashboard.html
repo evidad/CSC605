@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+
+{% block content %}
+  <h2>Welcome, {{ user.username }}!</h2>
+    
+  <h3>Your Transactions</h3>
+  <table>
+    <thead>
+      <tr>
+        <th>Category</th>
+        <th>Description</th>
+        <th>Amount</th>
+        <th>Date</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for transaction in transactions %}
+      <tr>
+        <td>{{ transaction.category }}</td>
+        <td>{{ transaction.description }}</td>
+        <td>${{ transaction.amount }}</td>
+        <td>{{ transaction.transaction_date }}</td>
+        <td>
+          <a href="{% url 'edit_transaction' transaction.id %}">Edit</a> |
+          <a href="{% url 'delete_transaction' transaction.id %}">Delete</a>
+        </td>
+      </tr>
+      {% empty %}
+      <tr>
+        <td colspan="5">No transactions found.</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  <a href="{% url 'add_transaction' %}">Add New Transaction</a>
+
+  <h3>Your Budgets</h3>
+  <ul>
+    {% for budget in budgets %}
+    <li>{{ budget.month }}: Income Goal: ${{ budget.income_goal }}, Savings Goal: ${{ budget.savings_goal }}</li>
+    {% empty %}
+    <li>No budgets found.</li>
+    {% endfor %}
+  </ul>
+
+  <a href="{% url 'logout' %}">Logout</a>
+{% endblock %}
