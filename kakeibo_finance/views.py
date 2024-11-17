@@ -7,7 +7,7 @@ from .serializers import TransactionSerializer, BudgetSerializer
 from .permissions import IsOwnerOrReadOnly
 from django.contrib.auth.views import LoginView
 from django.contrib.auth.forms import UserCreationForm
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404, redirect
 from django.contrib.auth.decorators import login_required
 from .forms import TransactionForm
 
@@ -73,3 +73,25 @@ def add_transaction(request):
 
     context = {'form': form}
     return render(request, 'add_transaction.html', context)
+
+# Edit Transaction View
+@login_required
+def edit_transaction(request, transaction_id):
+    transaction = get_object_or_404(Transaction, id=transaction_id, owner=request.user)
+    if request.method == 'POST':
+        form = TransactionForm(request.POST, instance=transaction)
+        if form.is_valid():
+            form.save()
+            return redirect('dashboard')
+    else:
+        form = TransactionForm(instance=transaction)
+    return render(request, 'edit_transaction.html', {'form': form})
+
+# Delete Transaction View
+@login_required
+def delete_transaction(request, transaction_id):
+    transaction = get_object_or_404(Transaction, id=transaction_id, owner=request.user)
+    if request.method == 'POST':
+        transaction.delete()
+        return redirect('dashboard')
+    return render(request, 'delete_transaction.html', {'transaction': transaction})

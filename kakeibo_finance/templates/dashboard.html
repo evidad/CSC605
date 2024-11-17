@@ -2,16 +2,16 @@
 
 {% block content %}
   <h2>Welcome, {{ user.username }}!</h2>
-
-  <!-- Transactions Section -->
+    
   <h3>Your Transactions</h3>
-  <table border="1" cellpadding="10" cellspacing="0">
+  <table>
     <thead>
       <tr>
         <th>Category</th>
         <th>Description</th>
         <th>Amount</th>
         <th>Date</th>
+        <th>Actions</th>
       </tr>
     </thead>
     <tbody>
@@ -21,37 +21,28 @@
         <td>{{ transaction.description }}</td>
         <td>${{ transaction.amount }}</td>
         <td>{{ transaction.transaction_date }}</td>
+        <td>
+          <a href="{% url 'edit_transaction' transaction.id %}">Edit</a> |
+          <a href="{% url 'delete_transaction' transaction.id %}">Delete</a>
+        </td>
       </tr>
       {% empty %}
       <tr>
-        <td colspan="4">No transactions found. <a href="{% url 'add_transaction' %}">Add your first transaction!</a></td>
+        <td colspan="5">No transactions found.</td>
       </tr>
       {% endfor %}
     </tbody>
   </table>
-  <p>
-    <a href="{% url 'add_transaction' %}">Add New Transaction</a>
-  </p>
+  <a href="{% url 'add_transaction' %}">Add New Transaction</a>
 
-  <!-- Budgets Section -->
   <h3>Your Budgets</h3>
   <ul>
     {% for budget in budgets %}
-    <li>
-      <strong>{{ budget.month }}</strong>: 
-      Income Goal: ${{ budget.income_goal }}, 
-      Savings Goal: ${{ budget.savings_goal }}
-    </li>
+    <li>{{ budget.month }}: Income Goal: ${{ budget.income_goal }}, Savings Goal: ${{ budget.savings_goal }}</li>
     {% empty %}
     <li>No budgets found.</li>
     {% endfor %}
   </ul>
-  <p>
-    <a href="#">Add New Budget (Coming Soon)</a>
-  </p>
 
-  <!-- Logout Section -->
-  <p>
-    <a href="{% url 'logout' %}">Logout</a>
-  </p>
+  <a href="{% url 'logout' %}">Logout</a>
 {% endblock %}
