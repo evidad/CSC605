@@ -47,4 +47,12 @@ def home(request):
 
 @login_required
 def dashboard(request):
-    return render(request, 'dashboard.html')
+    user = request.user
+    transactions = Transaction.objects.filter(owner=user).order_by('-transaction_date')
+    budgets = Budget.objects.filter(owner=user).order_by('-created_on')
+
+    context = {
+        'transactions': transactions,
+        'budgets': budgets,
+    }
+    return render(request, 'dashboard.html', context)
