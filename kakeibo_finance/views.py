@@ -9,7 +9,7 @@ from django.contrib.auth.views import LoginView
 from django.contrib.auth.forms import UserCreationForm
 from django.shortcuts import render, redirect, get_object_or_404, redirect
 from django.contrib.auth.decorators import login_required
-from .forms import TransactionForm
+from .forms import TransactionForm, BudgetForm
 
 # Transaction Views
 class TransactionListView(ListCreateAPIView):
@@ -52,9 +52,22 @@ def dashboard(request):
     transactions = Transaction.objects.filter(owner=user).order_by('-transaction_date')
     budgets = Budget.objects.filter(owner=user).order_by('-created_on')
 
+    # # Add budget tracking calculations
+    # for budget in budgets:
+    #     budget.total_expenses = budget.total_expenses  # Automatically calculated
+    #     budget.remaining_budget = budget.remaining_budget
+    
     context = {
         'transactions': transactions,
-        'budgets': budgets,
+        'budgets': [
+            {
+                'month': budget.month,
+                'income_goal': budget.income_goal,
+                'total_expenses': round(budget.total_expenses, 2),
+                'remaining_budget': round(budget.remaining_budget, 2),
+            }
+            for budget in budgets
+        ],
     }
     return render(request, 'dashboard.html', context)
 
@@ -95,3 +108,29 @@ def delete_transaction(request, transaction_id):
         transaction.delete()
         return redirect('dashboard')
     return render(request, 'delete_transaction.html', {'transaction': transaction})
+
+@login_required
+def add_budget(request):
+    if request.method == 'POST':
+        form = BudgetForm(request.POST)
+        if form.is_valid():
+            budget = form.save(commit=False)
+            budget.owner = request.user
+            budget.save()
+            return redirect('dashboard')
+    else:
+        form = BudgetForm()
+    return render(request, 'add_budget.html', {'form': form})
+
+# Budget View
+@login_required
+def edit_budget(request, budget_id):
+    budget = get_object_or_404(Budget, id=budget_id, owner=request.user)
+    if request.method == 'POST':
+        form = BudgetForm(request.POST, instance=budget)
+        if form.is_valid():
+            form.save()
+            return redirect('dashboard')
+    else:
+        form = BudgetForm(instance=budget)
+    return render(request, 'edit_budget.html', {'form': form})

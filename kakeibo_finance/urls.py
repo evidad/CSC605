@@ -9,4 +9,6 @@ urlpatterns = [
     # URLs for Budget model
     path('budgets/', BudgetListView.as_view(), name="budget_list"),
     path('budgets/<int:pk>/', BudgetDetailView.as_view(), name="budget_detail"),
+
+    
 ]

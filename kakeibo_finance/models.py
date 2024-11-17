@@ -1,4 +1,5 @@
 from django.db import models
+from django.db.models import Sum
 from django.contrib.auth import get_user_model
 
 class Transaction(models.Model):
@@ -29,5 +30,17 @@ class Budget(models.Model):
     created_on = models.DateTimeField(auto_now_add=True)
     updated_on = models.DateTimeField(auto_now=True)
 
+    @property
+    def total_expenses(self):
+        return (
+            Transaction.objects.filter(owner=self.owner, transaction_date__month=self.created_on.month)
+            .aggregate(total=Sum('amount'))['total']
+            or 0.00
+        )
+
+    @property
+    def remaining_budget(self):
+        return self.income_goal - self.total_expenses
+    
     def __str__(self):
         return f"{self.owner}'s Budget for {self.month}"

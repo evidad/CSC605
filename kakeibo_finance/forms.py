@@ -1,5 +1,5 @@
 from django import forms
-from .models import Transaction
+from .models import Transaction, Budget
 
 class TransactionForm(forms.ModelForm):
     class Meta:
@@ -8,3 +8,8 @@ class TransactionForm(forms.ModelForm):
         widgets = {
             'transaction_date': forms.DateInput(attrs={'type': 'date'}),
         }
+
+class BudgetForm(forms.ModelForm):
+    class Meta:
+        model = Budget
+        fields = ['month', 'income_goal', 'savings_goal']
