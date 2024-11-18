@@ -1,11 +1,15 @@
-{% extends "base.html" %}
-
-{% block content %}
-  <h2>Delete Transaction</h2>
-  <p>Are you sure you want to delete the transaction "{{ transaction.description }}"?</p>
-  <form method="post">
-    {% csrf_token %}
-    <button type="submit">Delete</button>
-    <a href="{% url 'dashboard' %}">Cancel</a>
-  </form>
-{% endblock %}
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Delete Transaction</title>
+</head>
+<body>
+    <h2>Delete Transaction</h2>
+    <p>Are you sure you want to delete the transaction "{{ transaction.description }}"?</p>
+    <form method="post">
+        {% csrf_token %}
+        <button type="submit">Yes, Delete</button>
+    </form>
+    <a href="{% url 'dashboard' %}">Back to Dashboard</a>
+</body>
+</html>
