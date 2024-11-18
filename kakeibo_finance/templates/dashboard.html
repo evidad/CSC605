@@ -1,6 +1,26 @@
 {% extends "base.html" %} 
 
 {% block content %}
+<style>
+    h2, h3 {
+        color: #4CAF50;
+    }
+
+    ul {
+        padding: 0;
+        list-style: none;
+    }
+
+    ul li {
+        padding: 8px 0;
+        border-bottom: 1px solid #ddd;
+    }
+
+    ul li:last-child {
+        border-bottom: none;
+    }
+</style>
+
 <h2>Welcome, {{ user.username }}!</h2>
 
 <!-- Transactions Section -->
@@ -10,7 +30,7 @@
     <tr>
       <th>Category</th>
       <th>Description</th>
-      <th>Amount</th>
+      <th class="text-right">Amount</th>
       <th>Date</th>
       <th>Actions</th>
     </tr>
@@ -20,7 +40,7 @@
     <tr>
       <td>{{ transaction.category }}</td>
       <td>{{ transaction.description }}</td>
-      <td>${{ transaction.amount }}</td>
+      <td class="text-right">${{ transaction.amount }}</td>
       <td>{{ transaction.transaction_date }}</td>
       <td>
         <a href="{% url 'edit_transaction' transaction.id %}">Edit</a> |
@@ -41,9 +61,8 @@
 <ul>
   {% for category in categories %}
   <li>{{ category.name }} 
-    <!-- Optionally, you can add edit/delete links -->
-    <a href="{% url 'edit_category' category.id %}">Edit</a> | 
-    <a href="{% url 'delete_category' category.id %}">Delete</a>
+    <a href="{% url 'edit_category' category.id %}" class="btn btn-primary btn-sm">Edit</a>
+    <a href="{% url 'delete_category' category.id %}" class="btn btn-danger btn-sm">Delete</a>
   </li>
   {% empty %}
   <li>No categories found.</li>
@@ -57,18 +76,18 @@
   <thead>
     <tr>
       <th>Month</th>
-      <th>Income Goal</th>
-      <th>Total Expenses</th>
-      <th>Remaining Budget</th>
+      <th class="text-right">Income Goal</th>
+      <th class="text-right">Total Expenses</th>
+      <th class="text-right">Remaining Budget</th>
     </tr>
   </thead>
   <tbody>
     {% for budget in budgets %}
     <tr>
       <td>{{ budget.month }}</td>
-      <td>${{ budget.income_goal }}</td>
-      <td>${{ budget.total_expenses }}</td>
-      <td>${{ budget.remaining_budget }}</td>
+      <td class="text-right">${{ budget.income_goal }}</td>
+      <td class="text-right">${{ budget.total_expenses }}</td>
+      <td class="text-right">${{ budget.remaining_budget }}</td>
     </tr>
     {% empty %}
     <tr>

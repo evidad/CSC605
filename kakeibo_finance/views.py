@@ -7,7 +7,7 @@ from .serializers import TransactionSerializer, BudgetSerializer
 from .permissions import IsOwnerOrReadOnly
 from django.contrib.auth.views import LoginView
 from django.contrib.auth.forms import UserCreationForm
-from django.shortcuts import render, redirect, get_object_or_404, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from .forms import CategoryForm, TransactionForm, BudgetForm
 
@@ -46,6 +46,7 @@ class SignupView(generic.CreateView):
 def home(request):
     return render(request, 'home.html')
 
+# Dashboard View
 @login_required
 def dashboard(request):
     user = request.user
@@ -53,23 +54,26 @@ def dashboard(request):
     budgets = Budget.objects.filter(owner=user).order_by('-created_on')
     categories = Category.objects.filter(owner=user).order_by('name')
 
-    # # Add budget tracking calculations
-    # for budget in budgets:
-    #     budget.total_expenses = budget.total_expenses  # Automatically calculated
-    #     budget.remaining_budget = budget.remaining_budget
-    
+    # Prepare budget data with calculated fields
+    budget_data = []
+    for budget in budgets:
+        total_expenses = sum(
+            transaction.amount
+            for transaction in transactions.filter(transaction_date__month=budget.created_on.month)
+        )
+        remaining_budget = budget.income_goal - total_expenses
+
+        budget_data.append({
+            'month': budget.month,
+            'income_goal': budget.income_goal,
+            'total_expenses': round(total_expenses, 2),
+            'remaining_budget': round(remaining_budget, 2),
+        })
+
     context = {
         'transactions': transactions,
         'categories': categories,
-        'budgets': [
-            {
-                'month': budget.month,
-                'income_goal': budget.income_goal,
-                'total_expenses': round(budget.total_expenses, 2),
-                'remaining_budget': round(budget.remaining_budget, 2),
-            }
-            for budget in budgets
-        ],
+        'budgets': budget_data,  # Use prepared budget data
     }
     return render(request, 'dashboard.html', context)
 
@@ -111,6 +115,7 @@ def delete_transaction(request, transaction_id):
         return redirect('dashboard')
     return render(request, 'delete_transaction.html', {'transaction': transaction})
 
+# Add Budget View
 @login_required
 def add_budget(request):
     if request.method == 'POST':
@@ -124,7 +129,7 @@ def add_budget(request):
         form = BudgetForm()
     return render(request, 'add_budget.html', {'form': form})
 
-# Budget View
+# Edit Budget View
 @login_required
 def edit_budget(request, budget_id):
     budget = get_object_or_404(Budget, id=budget_id, owner=request.user)
@@ -137,10 +142,10 @@ def edit_budget(request, budget_id):
         form = BudgetForm(instance=budget)
     return render(request, 'edit_budget.html', {'form': form})
 
-# Category View
+# Category Views
 @login_required
 def category_list(request):
-    categories = Category.objects.filter(owner=request.user)
+    categories = Category.objects.filter(owner=request.user).order_by('name')
     return render(request, 'category_list.html', {'categories': categories})
 
 @login_required
