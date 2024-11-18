@@ -3,7 +3,7 @@
 ## Project: Kakeibo 2.0
 
 ### Author: Anthony R, Dillion T Errol V
-V.1.2.1
+V.1.3.1
 
 ### Links and Resources
 - Back-end server url: http://localhost:8000
