@@ -2,17 +2,16 @@ from django.db import models
 from django.db.models import Sum
 from django.contrib.auth import get_user_model
 
-class Transaction(models.Model):
-    CATEGORY_CHOICES = [
-        ('INCOME', 'Income'),
-        ('ESSENTIAL', 'Essential'),
-        ('WANTS', 'Wants'),
-        ('SAVINGS', 'Savings'),
-        ('OTHER', 'Other')
-    ]
-    
+class Category(models.Model):
+    name = models.CharField(max_length=50)
     owner = models.ForeignKey(get_user_model(), on_delete=models.CASCADE)
-    category = models.CharField(max_length=20, choices=CATEGORY_CHOICES)
+
+    def __str__(self):
+        return self.name
+
+class Transaction(models.Model):
+    owner = models.ForeignKey(get_user_model(), on_delete=models.CASCADE)
+    category = models.ForeignKey(Category, on_delete=models.CASCADE)
     description = models.CharField(max_length=256)
     amount = models.DecimalField(max_digits=10, decimal_places=2)
     transaction_date = models.DateField()

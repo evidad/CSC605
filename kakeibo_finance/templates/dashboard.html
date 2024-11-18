@@ -1,69 +1,87 @@
-{% extends "base.html" %}
+{% extends "base.html" %} 
 
 {% block content %}
-  <h2>Welcome, {{ user.username }}!</h2>
-    
-  <h3>Your Transactions</h3>
-  <table>
-    <thead>
-      <tr>
-        <th>Category</th>
-        <th>Description</th>
-        <th>Amount</th>
-        <th>Date</th>
-        <th>Actions</th>
-      </tr>
-    </thead>
-    <tbody>
-      {% for transaction in transactions %}
-      <tr>
-        <td>{{ transaction.category }}</td>
-        <td>{{ transaction.description }}</td>
-        <td>${{ transaction.amount }}</td>
-        <td>{{ transaction.transaction_date }}</td>
-        <td>
-          <a href="{% url 'edit_transaction' transaction.id %}">Edit</a> |
-          <a href="{% url 'delete_transaction' transaction.id %}">Delete</a>
-        </td>
-      </tr>
-      {% empty %}
-      <tr>
-        <td colspan="5">No transactions found.</td>
-      </tr>
-      {% endfor %}
-    </tbody>
-  </table>
-  <a href="{% url 'add_transaction' %}" class="btn btn-primary">Add New Transaction</a>
+<h2>Welcome, {{ user.username }}!</h2>
 
-  <h3>Your Budgets</h3>
-  <table>
-    <thead>
-      <tr>
-        <th>Month</th>
-        <th>Income Goal</th>
-        <th>Total Expenses</th>
-        <th>Remaining Budget</th>
-      </tr>
-    </thead>
-    <tbody>
-      {% for budget in budgets %}
-      <tr>
-        <td>{{ budget.month }}</td>
-        <td>${{ budget.income_goal }}</td>
-        <td>${{ budget.total_expenses }}</td>
-        <td>${{ budget.remaining_budget }}</td>
-      </tr>
-      {% empty %}
-      <tr>
-        <td colspan="4">No budgets found.</td>
-      </tr>
-      {% endfor %}
-    </tbody>
-  </table>
-  <a href="{% url 'add_budget' %}" class="btn btn-primary">Add New Budget</a>
+<!-- Transactions Section -->
+<h3>Your Transactions</h3>
+<table>
+  <thead>
+    <tr>
+      <th>Category</th>
+      <th>Description</th>
+      <th>Amount</th>
+      <th>Date</th>
+      <th>Actions</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for transaction in transactions %}
+    <tr>
+      <td>{{ transaction.category }}</td>
+      <td>{{ transaction.description }}</td>
+      <td>${{ transaction.amount }}</td>
+      <td>{{ transaction.transaction_date }}</td>
+      <td>
+        <a href="{% url 'edit_transaction' transaction.id %}">Edit</a> |
+        <a href="{% url 'delete_transaction' transaction.id %}">Delete</a>
+      </td>
+    </tr>
+    {% empty %}
+    <tr>
+      <td colspan="5">No transactions found.</td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+<a href="{% url 'add_transaction' %}" class="btn btn-primary">Add New Transaction</a>
 
-  <form method="post" action="{% url 'logout' %}" style="margin-top: 20px;">
-    {% csrf_token %}
-    <button type="submit" class="btn btn-danger">Logout</button>
-  </form>
+<!-- Categories Section -->
+<h3>Your Categories</h3>
+<ul>
+  {% for category in categories %}
+  <li>{{ category.name }} 
+    <!-- Optionally, you can add edit/delete links -->
+    <a href="{% url 'edit_category' category.id %}">Edit</a> | 
+    <a href="{% url 'delete_category' category.id %}">Delete</a>
+  </li>
+  {% empty %}
+  <li>No categories found.</li>
+  {% endfor %}
+</ul>
+<a href="{% url 'add_category' %}" class="btn btn-primary">Add New Category</a>
+
+<!-- Budgets Section -->
+<h3>Your Budgets</h3>
+<table>
+  <thead>
+    <tr>
+      <th>Month</th>
+      <th>Income Goal</th>
+      <th>Total Expenses</th>
+      <th>Remaining Budget</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for budget in budgets %}
+    <tr>
+      <td>{{ budget.month }}</td>
+      <td>${{ budget.income_goal }}</td>
+      <td>${{ budget.total_expenses }}</td>
+      <td>${{ budget.remaining_budget }}</td>
+    </tr>
+    {% empty %}
+    <tr>
+      <td colspan="4">No budgets found.</td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+<a href="{% url 'add_budget' %}" class="btn btn-primary">Add New Budget</a>
+
+<!-- Logout Section -->
+<form method="post" action="{% url 'logout' %}" style="margin-top: 20px">
+  {% csrf_token %}
+  <button type="submit" class="btn btn-danger">Logout</button>
+</form>
 {% endblock %}
